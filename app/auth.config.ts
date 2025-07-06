@@ -11,16 +11,28 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       let isLoggedIn = !!auth?.user;
-      let isOnDashboard = nextUrl.pathname.startsWith('/protected');
+      let isOnGallery = nextUrl.pathname.startsWith('/gallery');
 
-      if (isOnDashboard) {
+      if (isOnGallery) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/protected', nextUrl));
+        return Response.redirect(new URL('/gallery', nextUrl));
       }
 
       return true;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token.id) {
+        session.user.id = token.id as string;
+      }
+      return session;
     },
   },
 } satisfies NextAuthConfig;

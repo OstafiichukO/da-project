@@ -1,9 +1,11 @@
 export function Form({
   action,
   children,
+  showNameField = false,
 }: {
   action: any;
   children: React.ReactNode;
+  showNameField?: boolean;
 }) {
   return (
     <form
@@ -27,6 +29,25 @@ export function Form({
           className="mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
         />
       </div>
+      {showNameField && (
+        <div>
+          <label
+            htmlFor="name"
+            className="block text-xs text-gray-600 uppercase"
+          >
+            Full Name
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="John Doe"
+            autoComplete="name"
+            required
+            className="mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+          />
+        </div>
+      )}
       <div>
         <label
           htmlFor="password"
