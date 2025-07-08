@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1751818541367,
-      "tag": "0000_busy_morg",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1751818737086,
-      "tag": "0001_remarkable_sunspot",
+      "when": 1751906957192,
+      "tag": "0000_daffy_wolf_cub",
       "breakpoints": true
     }
   ]

@@ -10,7 +10,7 @@ CREATE TABLE "Photo" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"album_id" integer NOT NULL,
 	"user_id" integer NOT NULL,
-	"url" varchar(500) NOT NULL,
+	"data" "bytea" NOT NULL,
 	"caption" text,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
@@ -18,6 +18,7 @@ CREATE TABLE "Photo" (
 CREATE TABLE "User" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"email" varchar(255) NOT NULL,
+	"name" varchar(255) NOT NULL,
 	"password" varchar(255) NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "User_email_unique" UNIQUE("email")

@@ -1,14 +1,17 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 
 interface PhotoUploadProps {
-  onUploadSuccess: (fileUrl: string) => void;
+  albumId: number;
+  userId: number;
+  onUploadSuccess: (photoId: number) => void;
   onUploadError: (error: string) => void;
   className?: string;
 }
 
-export function PhotoUpload({ onUploadSuccess, onUploadError, className = '' }: PhotoUploadProps) {
+export function PhotoUpload({ albumId, userId, onUploadSuccess, onUploadError, className = '' }: PhotoUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,6 +37,8 @@ export function PhotoUpload({ onUploadSuccess, onUploadError, className = '' }: 
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('albumId', String(albumId));
+      formData.append('userId', String(userId));
 
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -43,7 +48,10 @@ export function PhotoUpload({ onUploadSuccess, onUploadError, className = '' }: 
       const result = await response.json();
 
       if (response.ok) {
-        onUploadSuccess(result.fileUrl);
+        onUploadSuccess(result.photoId);
+        // Clear file input and preview after successful upload
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        setPreview(null);
       } else {
         onUploadError(result.error || 'Upload failed');
       }
@@ -64,13 +72,14 @@ export function PhotoUpload({ onUploadSuccess, onUploadError, className = '' }: 
         <label
           htmlFor="photo-upload"
           className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-          onClick={handleClick}
         >
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             {preview ? (
-              <img
+              <Image
                 src={preview}
                 alt="Preview"
+                width={192}
+                height={192}
                 className="max-h-48 max-w-full object-contain"
               />
             ) : (
@@ -93,7 +102,7 @@ export function PhotoUpload({ onUploadSuccess, onUploadError, className = '' }: 
                 <p className="mb-2 text-sm text-gray-500">
                   <span className="font-semibold">Click to upload</span> or drag and drop
                 </p>
-                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+                <p className="text-xs text-gray-500">JPG, JPEG, PNG up to 5MB</p>
               </>
             )}
           </div>
@@ -102,7 +111,7 @@ export function PhotoUpload({ onUploadSuccess, onUploadError, className = '' }: 
             id="photo-upload"
             type="file"
             className="hidden"
-            accept="image/*"
+            accept="image/jpeg,image/jpg,image/png"
             onChange={handleFileSelect}
             disabled={isUploading}
           />

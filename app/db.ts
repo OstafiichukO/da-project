@@ -26,11 +26,12 @@ export async function createUser(email: string, name: string, password: string) 
 
 // Album functions
 export async function createAlbum(userId: number, title: string, description?: string) {
-  return await db.insert(Album).values({
+  const result = await db.insert(Album).values({
     userId,
     title,
     description,
-  });
+  }).returning();
+  return result[0];
 }
 
 export async function getUserAlbums(userId: number) {
@@ -38,13 +39,13 @@ export async function getUserAlbums(userId: number) {
 }
 
 // Photo functions
-export async function createPhoto(albumId: number, userId: number, url: string, caption?: string) {
+export async function createPhoto(albumId: number, userId: number, data: Buffer, caption?: string) {
   return await db.insert(Photo).values({
     albumId,
     userId,
-    url,
+    data,
     caption,
-  });
+  }).returning({ id: Photo.id });
 }
 
 export async function getAlbumPhotos(albumId: number) {

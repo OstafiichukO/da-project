@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAlbum, getUserAlbums } from 'app/db';
+import { db } from 'app/db';
+import { Album } from 'app/schema';
+import { eq } from 'drizzle-orm';
 
 export async function GET(request: NextRequest) {
   const userId = request.nextUrl.searchParams.get('userId');
@@ -20,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     const album = await createAlbum(
-      parseInt(userId),
+      typeof userId === 'string' ? parseInt(userId) : userId,
       title,
       description
     );
@@ -32,9 +35,25 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error creating album:', error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: 'Failed to create album', details: error.message, stack: error.stack },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
       { error: 'Failed to create album' },
       { status: 500 }
     );
   }
+}
+
+export async function PUT(request: NextRequest) {
+  const albumId = request.nextUrl.searchParams.get('albumId');
+  const { title, description } = await request.json();
+  if (!albumId || !title) return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+  await db.update(Album)
+    .set({ title, description })
+    .where(eq(Album.id, Number(albumId)));
+  return NextResponse.json({ success: true });
 } 

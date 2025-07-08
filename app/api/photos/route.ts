@@ -1,5 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPhoto } from 'app/db';
+import { createPhoto, getAlbumPhotos } from 'app/db';
+import { db } from 'app/db';
+import { Photo } from 'app/schema';
+import { eq } from 'drizzle-orm';
+
+export async function GET(request: NextRequest) {
+  const photoId = request.nextUrl.searchParams.get('photoId');
+  if (photoId) {
+    // Fetch a single photo by ID
+    const photo = await db.select().from(Photo).where(eq(Photo.id, Number(photoId)));
+    return NextResponse.json({ photo: photo[0] || null });
+  }
+  const albumId = request.nextUrl.searchParams.get('albumId');
+  if (!albumId) return NextResponse.json({ photos: [] });
+  const photos = await getAlbumPhotos(Number(albumId));
+  return NextResponse.json({ photos });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,4 +47,11 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+export async function DELETE(request: NextRequest) {
+  const photoId = request.nextUrl.searchParams.get('photoId');
+  if (!photoId) return NextResponse.json({ error: 'Missing photoId' }, { status: 400 });
+  await db.delete(Photo).where(eq(Photo.id, Number(photoId)));
+  return NextResponse.json({ success: true });
 } 

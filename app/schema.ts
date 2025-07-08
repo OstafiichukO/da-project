@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, integer, timestamp, text } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, integer, timestamp, text, customType } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 // User table
@@ -19,12 +19,19 @@ export const Album = pgTable('Album', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
+// Custom bytea type for binary data
+const bytea = customType<{ data: Buffer }>({
+  dataType() {
+    return 'bytea';
+  },
+});
+
 // Photo table
 export const Photo = pgTable('Photo', {
   id: serial('id').primaryKey(),
   albumId: integer('album_id').notNull().references(() => Album.id),
   userId: integer('user_id').notNull().references(() => User.id),
-  url: varchar('url', { length: 500 }).notNull(),
+  data: bytea('data').notNull(), // Store image binary data
   caption: text('caption'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
