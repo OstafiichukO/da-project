@@ -393,7 +393,7 @@ export default function GalleryClient({ user }: { user: { id: string, email: str
                     }}
                     className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold hover:bg-red-600 z-10 opacity-0 group-hover:opacity-100 transition-opacity"
                   >
-                    <span className="flex items-center justify-center w-full h-full">×</span>
+                    <span className="flex items-center justify-center w-full h-full">x</span>
                   </button>
                   <Image
                     src={`/api/photos/${photo.id}/data`}
