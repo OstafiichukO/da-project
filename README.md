@@ -1,36 +1,118 @@
-# Next.js + PostgreSQL Auth Starter
+# Digital Family Album
 
-This is a [Next.js](https://nextjs.org/) starter kit that uses [NextAuth.js](https://next-auth.js.org/) for simple email + password login, [Drizzle](https://orm.drizzle.team) as the ORM, and a [Neon Postgres](https://vercel.com/postgres) database to persist the data.
+A modern web application for preserving your family's cultural and historical heritage. Collect, organize, and share photos, stories, and traditions in a secure digital album for future generations.
 
-## Deploy Your Own
+---
 
-You can clone & deploy it to Vercel with one click:
+## Features
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-title=Next.js%20Prisma%20PostgreSQL%20Auth%20Starter&demo-description=Simple%20Next.js%2013%20starter%20kit%20that%20uses%20Next-Auth%20for%20auth%20and%20Prisma%20PostgreSQL%20as%20a%20database.&demo-url=https%3A%2F%2Fnextjs-postgres-auth.vercel.app%2F&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F7rsVQ1ZBSiWe9JGO6FUeZZ%2F210cba91036ca912b2770e0bd5d6cc5d%2Fthumbnail.png&project-name=Next.js%%20Prisma%20PostgreSQL%20Auth%20Starter&repository-name=nextjs-postgres-auth-starter&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnextjs-postgres-auth-starter&from=templates&skippable-integrations=1&env=AUTH_SECRET&envDescription=Generate%20a%20random%20secret%3A&envLink=https://generate-secret.vercel.app/&stores=%5B%7B"type"%3A"postgres"%7D%5D)
+- **User Authentication**: Secure email + password login and registration (NextAuth.js)
+- **Personal Albums**: Each user can create, edit, and delete their own photo albums
+- **Photo Uploads**: Upload JPG/PNG images (up to 5MB), stored securely in the database
+- **Gallery View**: Browse albums and photos in a beautiful, responsive gallery
+- **Photo Modal**: View photos in a modal with next/prev navigation
+- **Photo Management**: Delete photos, edit album details, and organize your collection
+- **Cultural Heritage Focus**: Designed for families to preserve and celebrate their unique stories and traditions
+- **Accessible & Responsive**: Works great on desktop and mobile
 
-## Developing Locally
+---
 
-You can clone & create this repo with the following command
+## Tech Stack
 
-```bash
-npx create-next-app nextjs-typescript-starter --example "https://github.com/vercel/nextjs-postgres-auth-starter"
-```
+- [Next.js](https://nextjs.org/) (App Router, Server Components)
+- [NextAuth.js](https://next-auth.js.org/) for authentication
+- [Drizzle ORM](https://orm.drizzle.team/) for database access
+- [PostgreSQL](https://www.postgresql.org/) (Neon or local)
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [TypeScript](https://www.typescriptlang.org/)
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/OstafiichukO/da-project.git
+cd da-project
+```
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+# or
+yarn install
+# or
+npm install
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env.local` file in the root with the following:
+
+```
+POSTGRES_URL=postgres://<user>:<password>@<host>:<port>/<db>
+AUTH_SECRET=your-random-secret
+```
+
+- Generate a strong `AUTH_SECRET` [here](https://generate-secret.vercel.app/).
+
+### 4. Set Up the Database
+
+- Update `POSTGRES_URL` for your local or hosted Postgres instance.
+- Run migrations:
+
+```bash
+pnpm db:generate
+pnpm db:migrate
+```
+
+### 5. Start the Development Server
 
 ```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000) to view the app.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Usage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Register** for an account and log in
+- **Create albums** to organize your family’s photos
+- **Upload photos** (JPG/PNG, max 5MB each)
+- **View, flip through, and delete photos** in a modern gallery
+- **Edit album details** or delete albums as needed
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+---
+
+## Project Structure
+
+- `app/` — Next.js app directory (pages, components, API routes)
+- `app/gallery/` — Gallery and album management
+- `app/api/` — API routes for albums, photos, upload, and auth
+- `app/components/` — Reusable UI components
+- `app/db.ts` — Database access and queries
+- `app/schema.ts` — Drizzle ORM schema definitions
+- `drizzle/` — Database migrations
+- `public/assets/` — Static images (backgrounds, etc.)
+
+---
+
+## Deployment
+
+Deploy to [Vercel](https://vercel.com/) or your preferred platform. Set the required environment variables in your deployment dashboard.
+
+---
+
+## Contributing
+
+Contributions are welcome! Please open an issue or pull request for bug fixes, features, or improvements.
+
+---
+
+## License
+
+MIT
