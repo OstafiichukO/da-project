@@ -1,8 +1,8 @@
-import './globals.css';
+import "./globals.css";
 
-import { GeistSans } from 'geist/font/sans';
-import { auth } from './auth';
-import { Header } from './components/Header';
+import { GeistSans } from "geist/font/sans";
+import { auth } from "./auth/auth";
+import { Header } from "./components/Header";
 
 // let title = 'Next.js + Postgres Auth Starter';
 // let description =
@@ -20,18 +20,25 @@ import { Header } from './components/Header';
 // };
 
 export default async function RootLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  const session = await auth();
-  const user = session?.user as { id: string, email: string; name: string } | null;
-  return (
-    <html lang="en">
-      <body className={GeistSans.variable}>
-        <Header user={user} />
-        {children}
-      </body>
-    </html>
-  );
+    const session = await auth();
+    const user = session?.user as {
+        id: string;
+        email: string;
+        name: string;
+    } | null;
+    return (
+        <html lang="en">
+            <head></head>
+            <body
+                className={`${GeistSans.variable} leading-normal tracking-normal text-white gradient`}
+            >
+                <Header user={user} />
+                <div className="mt-[50px]">{children}</div>
+            </body>
+        </html>
+    );
 }
