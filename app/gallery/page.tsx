@@ -1,12 +1,6 @@
-import { auth } from "@/app/auth/auth";
-import GalleryClient from "./GalleryClient";
+import dynamic from "next/dynamic";
+const GalleryClient = dynamic(() => import("./GalleryClient"), { ssr: false });
 
-export default async function GalleryPage() {
-    const session = await auth();
-    const user = session?.user as {
-        id: string;
-        email: string;
-        name: string;
-    } | null;
-    return <GalleryClient user={user} />;
+export default function GalleryPage() {
+    return <GalleryClient />;
 }

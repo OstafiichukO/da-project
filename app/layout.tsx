@@ -2,7 +2,9 @@ import "./globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { auth } from "./auth/auth";
-import { Header } from "./components/Header";
+import { UserProvider } from "./components/UserContext";
+import Header from "./components/Header";
+import { Toaster } from "react-hot-toast";
 
 // let title = 'Next.js + Postgres Auth Starter';
 // let description =
@@ -21,8 +23,10 @@ import { Header } from "./components/Header";
 
 export default async function RootLayout({
     children,
+    params,
 }: {
     children: React.ReactNode;
+    params: { locale: string };
 }) {
     const session = await auth();
     const user = session?.user as {
@@ -31,13 +35,25 @@ export default async function RootLayout({
         name: string;
     } | null;
     return (
-        <html lang="en">
-            <head></head>
+        <html lang={params.locale}>
+            <head>
+                <meta charSet="utf-8" />
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
+                />
+            </head>
             <body
                 className={`${GeistSans.variable} leading-normal tracking-normal text-white gradient`}
             >
-                <Header user={user} />
-                <div className="mt-[50px]">{children}</div>
+                <UserProvider initialUser={user}>
+                    <Header />
+                    <Toaster
+                        position="top-right"
+                        toastOptions={{ duration: 3500 }}
+                    />
+                    <div className="mt-[50px]">{children}</div>
+                </UserProvider>
             </body>
         </html>
     );
