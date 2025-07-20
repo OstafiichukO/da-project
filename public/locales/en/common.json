@@ -58,5 +58,18 @@
     "emailPlaceholder": "user@acme.com",
     "fullNamePlaceholder": "John Doe",
     "password": "Password",
-    "passwordPlaceholder": "Enter your password"
+    "passwordPlaceholder": "Enter your password",
+    "optional": "optional",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "currentPasswordPlaceholder": "Enter current password",
+    "newPasswordPlaceholder": "Enter new password",
+    "confirmPasswordPlaceholder": "Confirm new password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "profileUpdated": "Profile updated successfully",
+    "updateFailed": "Failed to update profile",
+    "saving": "Saving...",
+    "logoutSuccess": "Successfully logged out",
+    "logoutFailed": "Failed to log out"
 }

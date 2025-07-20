@@ -7,19 +7,37 @@ import { handleSignIn } from "../auth/serverActions";
 import { SubmitButton } from "app/submit-button";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useUser } from "../components/UserContext";
 
 export default function Login() {
     const router = useRouter();
     const { t } = useTranslation("common");
+    const { setUser } = useUser();
+
     async function handleLogin(formData: FormData) {
         try {
             await handleSignIn(formData);
+
+            // Sync user state after successful login
+            try {
+                const response = await fetch("/api/auth/session");
+                if (response.ok) {
+                    const session = await response.json();
+                    if (session.user) {
+                        setUser(session.user);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to sync user state:", error);
+            }
+
             toast.success(t("loginSuccess"));
             router.push("/gallery");
         } catch (e) {
             toast.error(t("loginFailed"));
         }
     }
+
     return (
         <div className="flex h-screen w-screen items-center justify-center bg-[var(--color-light)]">
             <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 shadow-xl">

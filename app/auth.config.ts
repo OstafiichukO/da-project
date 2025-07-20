@@ -12,12 +12,9 @@ export const authConfig = {
         authorized({ auth, request: { nextUrl } }) {
             let isLoggedIn = !!auth?.user;
             let isOnGallery = nextUrl.pathname.startsWith("/gallery");
-            let isOnAccount = nextUrl.pathname.startsWith("/account");
+            let isOnProfile = nextUrl.pathname.startsWith("/profile");
 
-            if (isOnGallery) {
-                if (isLoggedIn) return true;
-                return false; // Redirect unauthenticated users to login page
-            } else if (isOnAccount) {
+            if (isOnGallery || isOnProfile) {
                 if (isLoggedIn) return true;
                 return false; // Redirect unauthenticated users to login page
             } else if (isLoggedIn) {

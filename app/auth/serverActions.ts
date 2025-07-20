@@ -4,7 +4,12 @@ import { redirect } from "next/navigation";
 import { createUser, getUser } from "../db";
 
 export const handleSignOut = async () => {
-    await signOut();
+    try {
+        await signOut({ redirectTo: "/" });
+    } catch (error) {
+        console.error("SignOut error:", error);
+        throw error;
+    }
 };
 
 export const handleSignIn = async (formData: FormData) => {

@@ -58,5 +58,18 @@
     "emailPlaceholder": "user@acme.com",
     "fullNamePlaceholder": "Іван Петренко",
     "password": "Пароль",
-    "passwordPlaceholder": "Введіть ваш пароль"
+    "passwordPlaceholder": "Введіть ваш пароль",
+    "optional": "необов'язково",
+    "currentPassword": "Поточний пароль",
+    "newPassword": "Новий пароль",
+    "confirmPassword": "Підтвердіть пароль",
+    "currentPasswordPlaceholder": "Введіть поточний пароль",
+    "newPasswordPlaceholder": "Введіть новий пароль",
+    "confirmPasswordPlaceholder": "Підтвердіть новий пароль",
+    "passwordsDoNotMatch": "Паролі не співпадають",
+    "profileUpdated": "Профіль успішно оновлено",
+    "updateFailed": "Не вдалося оновити профіль",
+    "saving": "Збереження...",
+    "logoutSuccess": "Успішно вийшли з системи",
+    "logoutFailed": "Помилка при виході з системи"
 }

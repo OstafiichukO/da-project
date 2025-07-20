@@ -7,6 +7,7 @@ import { useUser } from "./UserContext";
 import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useRouter, usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 const languages = [
     { code: "en", label: "English", flag: "🇬🇧" },
@@ -88,19 +89,44 @@ function LanguageSwitcher() {
 
 export default function Header() {
     const [showMenu, setShowMenu] = useState(false);
+    const [showUserMenu, setShowUserMenu] = useState(false);
     const { handleSignOut } = useAuth();
-    const { user } = useUser();
+    const { user, setUser } = useUser();
     const { t, i18n } = useTranslation("common");
     const router = useRouter();
     const pathname = usePathname();
 
-    const handleLogout = async (e: React.FormEvent) => {
-        e.preventDefault();
+    // Close user menu when pathname changes
+    useEffect(() => {
+        setShowUserMenu(false);
+    }, [pathname]);
+
+    // Close user menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as Element;
+            if (!target.closest(".user-menu-container")) {
+                setShowUserMenu(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleLogout = async () => {
         try {
-            await handleSignOut();
-            toast.success(t("logout") + "!", { id: "logout-toast" });
-        } catch {
-            toast.error("Logout failed");
+            await signOut({
+                redirect: true,
+                callbackUrl: "/",
+            });
+            setUser(null); // Clear user state immediately
+            setShowUserMenu(false); // Close menu
+            toast.success(t("logoutSuccess"), { id: "logout-toast" });
+        } catch (error) {
+            console.error("Logout error:", error);
+            toast.error(t("logoutFailed"));
         }
     };
 
@@ -123,19 +149,50 @@ export default function Header() {
                     <LanguageSwitcher />
                     {/* End Language Switcher */}
                     {user ? (
-                        <>
-                            <span className="text-[18px] font-medium mr-2">
-                                {user.name}
-                            </span>
-                            <form onSubmit={handleLogout} className="inline">
-                                <button
-                                    type="submit"
-                                    className="text-[18px] rounded-[4px] pt-[4px] pb-[4px] pl-[12px] pr-[12px] bg-[var(--color-light)] text-[var(--color-blue)] text-base transition-all duration-180"
+                        <div className="relative user-menu-container">
+                            <button
+                                onClick={() => setShowUserMenu(!showUserMenu)}
+                                className="flex items-center gap-2 px-3 py-1 rounded border bg-white shadow text-black hover:bg-gray-100 transition"
+                                type="button"
+                            >
+                                <div className="w-6 h-6 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                                    {user.name.charAt(0).toUpperCase()}
+                                </div>
+                                <span className="font-semibold text-sm">
+                                    {user.name}
+                                </span>
+                                <svg
+                                    className="w-4 h-4 ml-1"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
                                 >
-                                    {t("logout")}
-                                </button>
-                            </form>
-                        </>
+                                    <path d="M5 8l5 5 5-5H5z" />
+                                </svg>
+                            </button>
+                            {showUserMenu && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-20">
+                                    <div className="px-4 py-2 border-b border-gray-200">
+                                        <p className="text-sm text-gray-600">
+                                            {user.email}
+                                        </p>
+                                    </div>
+                                    <Link
+                                        href="/profile"
+                                        className="block w-full px-4 py-2 text-left hover:bg-gray-100 text-black transition"
+                                        onClick={() => setShowUserMenu(false)}
+                                    >
+                                        {t("profile")}
+                                    </Link>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 transition"
+                                        type="button"
+                                    >
+                                        {t("logout")}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     ) : (
                         <>
                             <Link

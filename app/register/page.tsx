@@ -7,16 +7,32 @@ import { handleRegister } from "../auth/serverActions";
 import { SubmitButton } from "app/submit-button";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useUser } from "../components/UserContext";
 
 export default function Register() {
     const router = useRouter();
     const { t } = useTranslation("common");
+    const { setUser } = useUser();
+
     async function handleRegisterForm(formData: FormData) {
         try {
             const result = await handleRegister(formData);
             if (result === "User already exists") {
                 toast.error(t("userExists"));
             } else {
+                // Sync user state after successful registration
+                try {
+                    const response = await fetch("/api/auth/session");
+                    if (response.ok) {
+                        const session = await response.json();
+                        if (session.user) {
+                            setUser(session.user);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Failed to sync user state:", error);
+                }
+
                 toast.success(t("registerSuccess"));
                 router.push("/gallery");
             }
@@ -24,6 +40,7 @@ export default function Register() {
             toast.error(t("registerFailed"));
         }
     }
+
     return (
         <div className="flex h-screen w-screen items-center justify-center bg-[var(--color-light)]">
             <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 shadow-xl">
@@ -31,7 +48,7 @@ export default function Register() {
                     <h3 className="text-xl font-semibold">{t("register")}</h3>
                     <p className="text-sm">{t("registerPrompt")}</p>
                 </div>
-                <Form action={handleRegisterForm} showNameField>
+                <Form action={handleRegisterForm} showNameField={true}>
                     <SubmitButton>{t("register")}</SubmitButton>
                     <p className="text-center text-sm ">
                         {t("haveAccount")}{" "}
@@ -41,7 +58,6 @@ export default function Register() {
                         >
                             {t("login")}
                         </Link>
-                        .
                     </p>
                 </Form>
             </div>
