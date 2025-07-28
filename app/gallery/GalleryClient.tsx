@@ -40,17 +40,19 @@ function EditAlbumModal({ album, onClose, onSave }: EditAlbumModalProps) {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-                <h2 className="text-xl font-semibold mb-4">{t("editAlbum")}</h2>
+                <h2 className="text-xl font-semibold mb-4 text-black">
+                    {t("editAlbum")}
+                </h2>
                 <form onSubmit={handleSubmit}>
                     <input
-                        className="w-full p-2 border rounded mb-2"
+                        className="w-full p-2 border rounded mb-2 text-black"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder={t("albumTitle")}
                         required
                     />
                     <textarea
-                        className="w-full p-2 border rounded mb-2"
+                        className="w-full p-2 border rounded mb-2 text-black"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder={t("albumDescription")}
@@ -473,7 +475,7 @@ export default function GalleryClient({
                                             </button>
                                         </div>
                                     )}
-                                    <h3 className="font-semibold text-[var(--color-blue)] text-lg">
+                                    <h3 className="font-semibold text-[var(--color-blue)] text-lg ">
                                         {album.title}
                                     </h3>
                                     {album.description && (
