@@ -33,6 +33,20 @@ function LanguageSwitcher() {
         }
     }, []);
 
+    // Close language selector when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as Element;
+            if (!target.closest(".language-selector-container")) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
     const handleChange = (lang: string) => {
         i18n.changeLanguage(lang);
         setSelected(lang);
@@ -43,7 +57,7 @@ function LanguageSwitcher() {
     if (!mounted) return null;
 
     return (
-        <div className="relative">
+        <div className="relative language-selector-container">
             <button
                 className="flex items-center gap-2 px-3 py-1 rounded border bg-white shadow text-black"
                 onClick={() => setOpen((o) => !o)}
